@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>中文默書互動練習｜火柴人＋敕勒歌</title>
+<style>
+:root{
+  --bg:#f5f8ff;--card:#fff;--ink:#202437;--muted:#667085;--border:#dce5f4;
+  --accent:#5271ff;--accent2:#ffb84d;--ok:#169653;--bad:#e24f4f;--purple:#7c5cff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;background:linear-gradient(180deg,#edf4ff 0,#fafcff 45%,#f5f8ff 100%);color:var(--ink)}
+.wrap{max-width:1180px;margin:0 auto;padding:22px}
+h1{margin:0 0 7px;font-size:clamp(1.7rem,4vw,2.35rem)}
+.sub{color:var(--muted);line-height:1.65;margin-bottom:16px}
+.topbar,.nav,.controls{display:flex;gap:10px;flex-wrap:wrap}
+.topbar{margin-bottom:16px}.pill{padding:9px 13px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:.94rem}
+.nav{margin-bottom:16px}.tab{padding:12px 17px;border-radius:13px;border:1px solid var(--border);background:#fff;font-weight:800;color:#39415a;cursor:pointer}.tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}@media(min-width:920px){.grid{grid-template-columns:1.18fr .82fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:19px;padding:18px;box-shadow:0 9px 30px rgba(53,82,160,.08)}
+.title-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.title-row h2,.title-row h3{margin:0}.badge{padding:7px 11px;border-radius:999px;background:#eef2ff;border:1px solid #d8e0ff;font-size:.9rem}
+.btn{padding:11px 15px;border:0;border-radius:12px;background:var(--accent);color:#fff;font:inherit;font-weight:800;cursor:pointer}.btn:hover{transform:translateY(-1px);filter:brightness(.99)}.btn.secondary{background:#fff;color:#334;border:1px solid var(--border)}.btn.orange{background:var(--accent2);color:#573d00}.btn.purple{background:var(--purple)}
+.progress{height:11px;background:#edf1f8;border-radius:999px;overflow:hidden;margin:12px 0 7px}.bar{height:100%;width:0;background:linear-gradient(90deg,#5271ff,#8ca4ff)}
+.meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:.93rem;flex-wrap:wrap}
+.question-grid{display:grid;grid-template-columns:1fr;gap:15px;margin-top:15px}@media(min-width:730px){.question-grid{grid-template-columns:1fr 1.08fr}}
+.illustration-panel{min-height:360px;border:1px dashed #c8d5ed;border-radius:17px;background:linear-gradient(180deg,#fbfdff,#f1f6ff);padding:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;overflow:hidden}
+svg.illus{width:100%;max-width:400px;height:auto}.illus-label{font-size:.93rem;color:var(--muted);text-align:center}.term-ghost{font-size:1.85rem;font-weight:900;letter-spacing:7px;color:#c9d3ea;min-height:42px}
+.prompt{background:#f9fbfe;border:1px solid var(--border);border-radius:15px;padding:15px;line-height:1.8;font-size:1.08rem}
+.options{display:grid;grid-template-columns:1fr;gap:9px;margin-top:13px}@media(min-width:560px){.options{grid-template-columns:1fr 1fr}}
+.option{width:100%;min-height:60px;padding:12px 14px;border:2px solid #dde5f3;border-radius:14px;background:#fff;text-align:left;font:inherit;font-size:1.05rem;display:flex;align-items:center;gap:9px;cursor:pointer}.option:hover{border-color:#b9c7f5;background:#f8faff}.option.correct{border-color:#9fdcb8;background:#effcf4}.option.wrong{border-color:#efb3b3;background:#fff3f3}.tag{width:28px;height:28px;border-radius:50%;background:#eef2ff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 auto}
+.feedback{display:none;margin-top:11px;padding:11px 13px;border-radius:12px;font-weight:800;line-height:1.55}.feedback.show{display:block}.feedback.ok{background:#edfff4;color:#146f3c;border:1px solid #b9e6ca}.feedback.bad{background:#fff0f0;color:#982f2f;border:1px solid #edbebe}
+.small{font-size:.92rem;color:var(--muted)}.side-note{line-height:1.7;color:#4d566e}.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.mini{background:#f8fbff;border:1px solid var(--border);border-radius:15px;padding:13px;text-align:center}.mini strong{font-size:1.55rem;display:block}.result{display:none;margin-top:14px;padding:14px;border-radius:15px;border:1px solid var(--border);background:#fbfdff}.result.show{display:block}.review{display:grid;gap:7px}.review div{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 11px}
+/* poem */
+.poem-head{display:grid;grid-template-columns:1fr;gap:16px}@media(min-width:850px){.poem-head{grid-template-columns:.75fr 1.25fr}}
+.poem-card{background:linear-gradient(180deg,#fffdf7,#fff);border:1px solid #eadfbe}.poem-text{text-align:center;line-height:2.05;font-family:"KaiTi","STKaiti","DFKai-SB",serif;font-size:clamp(1.25rem,3.5vw,1.65rem);padding:9px}.author{font-size:.95rem;color:#786d55;margin-bottom:7px}
+.level-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.level-btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#fff;font:inherit;font-weight:800;cursor:pointer}.level-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.poem-level{display:none}.poem-level.active{display:block}.instruction{padding:12px 14px;background:#f8f7ff;border:1px solid #e2ddff;border-radius:13px;line-height:1.65;margin-bottom:12px}
+.order-board{display:grid;gap:9px;margin:10px 0}.slot{min-height:56px;border:2px dashed #ccd6ea;border-radius:13px;padding:11px 13px;background:#fbfdff;display:flex;align-items:center;gap:10px}.slot.done{border-style:solid;border-color:#b7e2c8;background:#f1fff6}.slot-num{width:29px;height:29px;border-radius:50%;background:#eef2ff;display:inline-flex;align-items:center;justify-content:center;font-weight:900;flex:0 0 auto}.line-choices{display:grid;gap:9px}.line-btn{width:100%;padding:13px 14px;border:2px solid #dce4f1;border-radius:13px;background:#fff;text-align:left;font:inherit;font-size:1.05rem;cursor:pointer;line-height:1.55}.line-btn:hover{background:#f8faff;border-color:#bcc9f4}.line-btn.used{opacity:.35;pointer-events:none}.line-btn.wrongflash{animation:shake .3s;border-color:#e68f8f;background:#fff1f1}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.char-slots{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin:14px 0}.char-slot{width:45px;height:51px;border-bottom:3px solid #aab7d1;display:flex;align-items:center;justify-content:center;font-size:1.55rem;font-weight:900}.char-slot.filled{border-color:#65b789;color:#155d36;background:#f0fff6;border-radius:9px}
+.char-bank{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;padding:13px;border:1px solid var(--border);border-radius:15px;background:#f9fbff}.char-btn{min-width:50px;height:52px;padding:0 12px;border:2px solid #d9e2f1;border-radius:12px;background:#fff;font:inherit;font-size:1.45rem;font-weight:900;cursor:pointer}.char-btn:hover{border-color:#aebef2;background:#f8faff}.char-btn.used{opacity:.25;pointer-events:none}.char-btn.wrongflash{animation:shake .3s;border-color:#e68f8f;background:#fff1f1}
+.line-picker{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.pick{padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font:inherit;font-weight:800;cursor:pointer}.pick.active{background:#eef2ff;border-color:#aebcf0;color:#3448a5}
+.answer-banner{display:none;margin-top:11px;padding:11px 13px;border-radius:12px;font-weight:800}.answer-banner.show{display:block}.answer-banner.ok{background:#edfff4;border:1px solid #b6e3c8;color:#176a3d}.answer-banner.bad{background:#fff1f1;border:1px solid #efc0c0;color:#9a3030}
+.footer-note{margin-top:13px;color:var(--muted);font-size:.9rem;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>中文默書互動練習</h1>
+  <div class="sub">詞語、成語用搞笑火柴人做圖像記憶；《敕勒歌》加入句子排序及逐字排序兩個 Level。語音使用瀏覽器普通話朗讀。</div>
+  <div class="topbar">
+    <div class="pill">🧍 16 張搞笑火柴人圖</div><div class="pill">🎲 每次隨機出題</div><div class="pill">🔊 普通話朗讀</div><div class="pill">📜 古詩 2 Levels</div>
+  </div>
+  <div class="nav">
+    <button class="tab active" data-panel="quizPanel" data-mode="words">📚 課文詞語</button>
+    <button class="tab" data-panel="quizPanel" data-mode="idioms">🌟 成語</button>
+    <button class="tab" data-panel="poemPanel">📜 《敕勒歌》</button>
+  </div>
+
+  <section class="panel active" id="quizPanel">
+    <div class="grid">
+      <div class="card">
+        <div class="title-row"><h2 id="partTitle">課文詞語</h2><div class="badge" id="partBadge">第 1 / 8 題</div></div>
+        <div class="controls" style="margin-top:10px"><button class="btn orange" id="restartBtn">🎲 重新隨機</button><button class="btn secondary" id="speakBtn">🔊 再讀解釋</button><button class="btn secondary" id="hintBtn">💡 小提示</button></div>
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+        <div class="meta"><div id="progressText">進度：1 / 8</div><div id="scoreText">分數：0</div></div>
+        <div class="question-grid">
+          <div class="illustration-panel"><div id="illustration"></div><div class="illus-label">火柴人字面聯想圖（唔直接寫答案）</div><div class="term-ghost" id="termGhost">□□□□</div></div>
+          <div>
+            <div class="prompt" id="promptBox"></div>
+            <div class="small" id="hintText" style="display:none;margin-top:8px"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="controls" style="margin-top:12px"><button class="btn" id="nextBtn" style="display:none">下一題 ➜</button></div>
+          </div>
+        </div>
+        <div class="result" id="resultBox"></div>
+      </div>
+      <aside class="card">
+        <div class="title-row"><h3>家長提示</h3><div class="badge">圖像記憶</div></div>
+        <div class="side-note">先叫小朋友<strong>睇火柴人發生緊咩事</strong>，再聽普通話解釋，最後先揀 A/B/C/D。火柴人圖刻意誇張、搞笑，目的係令字面意思更易記。</div>
+        <div class="score-grid"><div class="mini"><strong id="bestWords">0</strong>詞語最高分</div><div class="mini"><strong id="bestIdioms">0</strong>成語最高分</div></div>
+        <div class="footer-note">如果瀏覽器第一次冇聲，按一次「🔊 再讀解釋」通常就會啟動語音。</div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="panel" id="poemPanel">
+    <div class="poem-head">
+      <div class="card poem-card">
+        <div class="title-row"><h2>《敕勒歌》</h2><div class="badge">北朝民歌</div></div>
+        <div class="poem-text">
+          <div class="author">敕勒歌　北朝民歌</div>
+          敕勒川，陰山下，<br>
+          天似穹廬，籠蓋四野。<br>
+          天蒼蒼，野茫茫，<br>
+          風吹草低見牛羊。
+        </div>
+        <div class="controls" style="justify-content:center"><button class="btn secondary" id="readPoemBtn">🔊 讀全詩</button></div>
+      </div>
+      <div class="card">
+        <div class="title-row"><h2>古詩排序遊戲</h2><div class="badge" id="poemLevelBadge">Level 1</div></div>
+        <div class="level-tabs"><button class="level-btn active" data-level="level1">Level 1｜一句句排</button><button class="level-btn" data-level="level2">Level 2｜一隻隻字排</button></div>
+
+        <div class="poem-level active" id="level1">
+          <div class="instruction"><strong>玩法：</strong>下面四句已打亂。由第一句開始 CLICK。每次 CLICK 都會讀出嗰句；如果揀錯，會即時顯示<strong>今格正確句子</strong>。</div>
+          <div class="controls"><button class="btn purple" id="shuffleLinesBtn">🔀 換一個排列</button><button class="btn secondary" id="resetLinesBtn">↺ 清空重做</button></div>
+          <div class="order-board" id="lineBoard"></div>
+          <div class="line-choices" id="lineChoices"></div>
+          <div class="answer-banner" id="lineFeedback"></div>
+        </div>
+
+        <div class="poem-level" id="level2">
+          <div class="instruction"><strong>玩法：</strong>揀一行古詩，下面啲字會打亂。逐隻字 CLICK 排番正確次序。每按一個字都會讀音；錯咗會即刻 SHOW <strong>下一隻正確字</strong>。</div>
+          <div class="line-picker" id="linePicker"></div>
+          <div class="controls"><button class="btn purple" id="changeLineBtn">🎲 換一句</button><button class="btn secondary" id="readLineBtn">🔊 讀整句</button><button class="btn secondary" id="reshuffleCharsBtn">🔀 重新打亂字</button></div>
+          <div class="char-slots" id="charSlots"></div>
+          <div class="char-bank" id="charBank"></div>
+          <div class="answer-banner" id="charFeedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const words=[
+ {term:'保護',definition:'盡力照顧，使不受損害。',hint:'想像：有個火柴人擋住危險，保住另一個人。',image:'protection'},
+ {term:'主意',definition:'立定的心意、辦法。',hint:'想像：火柴人突然諗到辦法，頭頂亮燈泡。',image:'idea'},
+ {term:'普通',definition:'平常的；一般的。',hint:'想像：一排火柴人個個都差唔多，冇乜特別。',image:'ordinary'},
+ {term:'糊塗',definition:'混亂；不清楚；不明事理。',hint:'想像：火柴人抓頭，腦袋入面一團亂線。',image:'confused'},
+ {term:'禮貌',definition:'態度謙虛恭敬，符合一定禮儀的表現。',hint:'想像：兩個火柴人見面互相鞠躬。',image:'manners'},
+ {term:'半信半疑',definition:'有點兒相信，又有點兒懷疑。',hint:'想像：火柴人左邊想「係」，右邊又想「？」。',image:'doubt'},
+ {term:'到底',definition:'表示深究，究竟。',hint:'想像：火柴人一路落到最底，仲拎放大鏡查究竟。',image:'bottom'},
+ {term:'驚慌',definition:'害怕慌張。',hint:'想像：火柴人見到蜘蛛嚇到手腳亂晒。',image:'panic'}
+];
+const idioms=[
+ {term:'手舞足蹈',definition:'形容高興到極點的樣子。',hint:'火柴人開心得手舞腳跳。',image:'dance'},
+ {term:'目瞪口呆',definition:'形容因為吃驚、害怕或生氣而發呆的樣子。',hint:'火柴人眼大大、口擘大大，成個人呆咗。',image:'shocked'},
+ {term:'生龍活虎',definition:'比喻活潑矯健，充滿活力。',hint:'兩個火柴人扮龍扮虎，精神到不得了。',image:'dragonTiger'},
+ {term:'老當益壯',definition:'現在多形容人年老而精力旺盛。',hint:'老火柴人拎住拐杖，仲可以舉大啞鈴。',image:'strongElder'},
+ {term:'垂頭喪氣',definition:'形容因事情不如意而精神不振的樣子。',hint:'火柴人垂低頭，成個人軟晒。',image:'sad'},
+ {term:'啞口無言',definition:'形容因理虧而無話可說的樣子。',hint:'火柴人掩住個口，對話框俾人打叉。',image:'silent'},
+ {term:'揚揚得意',definition:'形容因完全符合心意而神氣十足的樣子。',hint:'火柴人企上台拎獎，昂高個頭好神氣。',image:'proud'},
+ {term:'談笑風生',definition:'形容談話的時候有說有笑，興致非常高。',hint:'兩個火柴人一路傾一路笑，旁邊仲吹起風。',image:'chatting'}
+];
+const poemLines=[
+ {text:'敕勒川，陰山下，',chars:'敕勒川陰山下',audio:'敕勒川，阴山下'},
+ {text:'天似穹廬，籠蓋四野。',chars:'天似穹廬籠蓋四野',audio:'天似穹庐，笼盖四野'},
+ {text:'天蒼蒼，野茫茫，',chars:'天蒼蒼野茫茫',audio:'天苍苍，野茫茫'},
+ {text:'風吹草低見牛羊。',chars:'風吹草低見牛羊',audio:'风吹草低现牛羊'}
+];
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return s.replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function speak(text,rate=.86){if(!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=rate;u.pitch=1;const vs=window.speechSynthesis.getVoices();const v=vs.find(x=>/zh-CN|Mandarin|普通话|国语/i.test(x.lang+' '+x.name));if(v)u.voice=v;window.speechSynthesis.speak(u)}
+function speakChar(ch){speak(ch==='見'?'现':ch,.72)}
+
+function stick(x,y,o={}){
+ const s=o.s||1,c=o.c||'#5271ff',skin=o.skin||'#ffd7c2',face=o.face||'smile';
+ const al=o.al||[-34,58],ar=o.ar||[34,58],ll=o.ll||[-26,122],lr=o.lr||[28,122];
+ let mouth=face==='shock'?'<ellipse cx="0" cy="10" rx="8" ry="12" fill="#fff" stroke="#333" stroke-width="3"/>':face==='sad'?'<path d="M-10 13 Q0 3 10 13" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>':face==='flat'?'<path d="M-10 10 H10" stroke="#333" stroke-width="3" stroke-linecap="round"/>':'<path d="M-10 8 Q0 18 10 8" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round"/>';
+ let eyes=face==='shock'?'<circle cx="-9" cy="-5" r="5" fill="#333"/><circle cx="9" cy="-5" r="5" fill="#333"/>':'<circle cx="-8" cy="-4" r="3.5" fill="#333"/><circle cx="8" cy="-4" r="3.5" fill="#333"/>';
+ let hair=o.old?'<path d="M-18 -18 Q0 -35 18 -18" fill="none" stroke="#b9bdc8" stroke-width="6" stroke-linecap="round"/>':'';
+ return `<g transform="translate(${x} ${y}) scale(${s})"><circle cx="0" cy="0" r="23" fill="${skin}" stroke="#9d6e59" stroke-width="4"/>${eyes}${mouth}${hair}<path d="M0 24 V82" stroke="${c}" stroke-width="9" stroke-linecap="round"/><path d="M0 40 L${al[0]} ${al[1]} M0 40 L${ar[0]} ${ar[1]}" stroke="${c}" stroke-width="9" stroke-linecap="round"/><path d="M0 82 L${ll[0]} ${ll[1]} M0 82 L${lr[0]} ${lr[1]}" stroke="${c}" stroke-width="9" stroke-linecap="round"/></g>`;
+}
+function renderIllustration(kind){
+ const common='class="illus" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="搞笑火柴人聯想圖"';
+ const bg='<rect x="5" y="5" width="390" height="290" rx="28" fill="#fbfdff" stroke="#dbe4f0" stroke-width="3"/>';
+ const scenes={
+  protection:`<svg ${common}>${bg}${stick(130,105,{s:.8,c:'#5271ff',face:'shock',al:[-42,35],ar:[42,35]})}${stick(260,132,{s:.52,c:'#39a86b',face:'smile'})}<path d="M174 90 Q210 48 246 90 V182 Q210 216 174 182Z" fill="#e8f1ff" stroke="#5271ff" stroke-width="7"/><path d="M195 137 l14 14 l28 -37" fill="none" stroke="#25a05b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><g fill="#777"><circle cx="92" cy="48" r="11"/><circle cx="126" cy="38" r="8"/><circle cx="157" cy="51" r="10"/></g><path d="M90 58 L104 82 M126 48 L132 75 M158 61 L151 84" stroke="#999" stroke-width="4"/></svg>`,
+  idea:`<svg ${common}>${bg}${stick(194,142,{s:.86,c:'#7c5cff',face:'smile',al:[-42,38],ar:[42,38]})}<circle cx="194" cy="55" r="31" fill="#ffe56f" stroke="#d8a600" stroke-width="5"/><rect x="180" y="84" width="28" height="20" rx="6" fill="#ffc84c" stroke="#d8a600" stroke-width="4"/><g stroke="#d8a600" stroke-width="5" stroke-linecap="round"><line x1="194" y1="15" x2="194" y2="2"/><line x1="158" y1="28" x2="149" y2="18"/><line x1="230" y1="28" x2="239" y2="18"/><line x1="149" y1="56" x2="136" y2="56"/><line x1="239" y1="56" x2="252" y2="56"/></g><path d="M176 52 q18 -22 36 0 q-8 17 -18 25 q-10 -8 -18 -25" fill="#fff6be"/></svg>`,
+  ordinary:`<svg ${common}>${bg}${stick(75,117,{s:.54,c:'#6c7fb8',face:'flat'})}${stick(140,117,{s:.54,c:'#6c7fb8',face:'flat'})}${stick(205,117,{s:.54,c:'#6c7fb8',face:'flat',al:[-28,52],ar:[28,52]})}${stick(270,117,{s:.54,c:'#6c7fb8',face:'flat'})}${stick(335,117,{s:.54,c:'#6c7fb8',face:'flat'})}<path d="M48 253 H352" stroke="#c0cae0" stroke-width="6" stroke-linecap="round"/></svg>`,
+  confused:`<svg ${common}>${bg}${stick(196,150,{s:.83,c:'#6277df',face:'flat',al:[-45,18],ar:[45,18]})}<path d="M135 105 Q123 80 145 72 Q156 45 181 56 Q204 39 222 60 Q251 54 260 79 Q282 91 267 112 Q266 137 239 140 Q222 159 202 143 Q177 158 160 139 Q137 139 135 105Z" fill="#ffadc0" stroke="#b95067" stroke-width="5"/><path d="M154 87 C170 64 181 104 198 80 C216 56 233 94 245 76 M155 111 C172 135 188 89 205 115 C220 138 237 107 246 126" fill="none" stroke="#7c3550" stroke-width="6" stroke-linecap="round"/><text x="92" y="88" font-size="42" fill="#7c5cff">?</text><text x="286" y="90" font-size="42" fill="#7c5cff">?</text><path d="M160 138 Q146 152 140 171 M232 139 Q247 152 251 170" stroke="#9d6e59" stroke-width="5" fill="none"/></svg>`,
+  manners:`<svg ${common}>${bg}${stick(126,103,{s:.72,c:'#5271ff',face:'smile',al:[-16,70],ar:[34,66],ll:[-28,122],lr:[18,122]})}${stick(274,103,{s:.72,c:'#f19a45',face:'smile',al:[-34,66],ar:[16,70],ll:[-18,122],lr:[28,122]})}<path d="M95 77 Q126 96 157 77 M243 77 Q274 96 305 77" fill="none" stroke="#9d6e59" stroke-width="4"/><path d="M154 179 Q200 198 246 179" stroke="#bcc7dd" stroke-width="5" stroke-dasharray="7 7" fill="none"/><path d="M181 76 h38 q13 0 13 13 v13 q0 13-13 13 h-11 l-8 10 v-10 h-19 q-13 0-13-13 V89 q0-13 13-13Z" fill="#fff" stroke="#b6c2e4" stroke-width="3"/><path d="M183 97 q17 12 34 0" stroke="#56a06d" stroke-width="4" fill="none"/></svg>`,
+  doubt:`<svg ${common}>${bg}${stick(200,142,{s:.82,c:'#6f75df',face:'flat',al:[-45,45],ar:[45,45]})}<circle cx="102" cy="83" r="38" fill="#effff4" stroke="#37a568" stroke-width="5"/><path d="M83 84 l13 14 l28 -35" fill="none" stroke="#37a568" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="300" cy="83" r="38" fill="#fff7e6" stroke="#e6a137" stroke-width="5"/><path d="M286 75 q0 -16 15 -16 q14 0 14 12 q0 10 -9 14 q-7 3 -7 12" fill="none" stroke="#e6a137" stroke-width="7" stroke-linecap="round"/><circle cx="300" cy="108" r="4" fill="#e6a137"/><path d="M174 113 Q142 90 127 104 M226 113 Q258 90 273 104" fill="none" stroke="#a5afc9" stroke-width="5" stroke-dasharray="7 6"/></svg>`,
+  bottom:`<svg ${common}>${bg}<path d="M78 82 Q200 55 322 82 L284 257 H116Z" fill="#eef3fb" stroke="#8291bb" stroke-width="5"/><ellipse cx="200" cy="82" rx="122" ry="27" fill="#d4deef" stroke="#8291bb" stroke-width="5"/>${stick(200,153,{s:.58,c:'#5271ff',face:'shock',al:[-28,55],ar:[30,35],ll:[-20,116],lr:[20,116]})}<path d="M200 64 V124" stroke="#555" stroke-width="5" stroke-dasharray="7 6"/><circle cx="252" cy="186" r="20" fill="none" stroke="#e5a23d" stroke-width="6"/><path d="M266 201 l21 22" stroke="#e5a23d" stroke-width="7" stroke-linecap="round"/><path d="M176 242 H224" stroke="#5271ff" stroke-width="8" stroke-linecap="round"/><path d="M188 229 l12 13 l12 -13" fill="none" stroke="#5271ff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  panic:`<svg ${common}>${bg}${stick(205,108,{s:.82,c:'#5271ff',face:'shock',al:[-50,5],ar:[52,18],ll:[-42,116],lr:[45,105]})}<g transform="translate(75 205)"><circle cx="0" cy="0" r="11" fill="#444"/><path d="M-9 -6 l-18 -15 M-9 3 l-23 0 M-8 9 l-18 15 M9 -6 l18 -15 M9 3 l23 0 M8 9 l18 15" stroke="#444" stroke-width="5" stroke-linecap="round"/></g><path d="M142 70 l-22 -25 M259 68 l22 -25 M140 114 l-30 -2" stroke="#f05b5b" stroke-width="8" stroke-linecap="round"/><text x="290" y="100" font-size="42" fill="#ef5f5f">!</text></svg>`,
+  dance:`<svg ${common}>${bg}${stick(200,105,{s:.86,c:'#5271ff',face:'smile',al:[-55,-2],ar:[55,-2],ll:[-48,115],lr:[50,100]})}<path d="M92 82 q-26 25 0 50 M308 82 q26 25 0 50 M106 228 q-26 -8 -34 15 M292 218 q26 5 34 24" fill="none" stroke="#f1a23a" stroke-width="7" stroke-linecap="round"/><text x="80" y="57" font-size="30">♪</text><text x="302" y="60" font-size="30">♫</text></svg>`,
+  shocked:`<svg ${common}>${bg}${stick(200,128,{s:.95,c:'#6377df',face:'shock',al:[-44,40],ar:[44,40],ll:[-30,121],lr:[30,121]})}<rect x="58" y="186" width="88" height="58" rx="8" fill="#ffd36b" stroke="#c9951f" stroke-width="5"/><path d="M58 186 l44 -34 l44 34 M102 153 v34" fill="#fff0b0" stroke="#c9951f" stroke-width="5"/><path d="M153 75 l-25 -22 M247 75 l25 -22" stroke="#f05f5f" stroke-width="8" stroke-linecap="round"/></svg>`,
+  dragonTiger:`<svg ${common}>${bg}${stick(132,127,{s:.68,c:'#3a9fd6',face:'smile',al:[-40,25],ar:[40,25]})}${stick(270,127,{s:.68,c:'#e79b34',face:'smile',al:[-40,25],ar:[40,25]})}<path d="M104 94 q28 -36 56 0 l-10 -27 l-15 17 l-15 -17Z" fill="#88d7ff" stroke="#2f83b2" stroke-width="4"/><path d="M243 94 q27 -31 54 0 l-10 -26 l-14 17 l-14 -17Z" fill="#ffc76a" stroke="#bd761b" stroke-width="4"/><path d="M248 90 l10 12 M262 84 l10 14 M278 84 l10 14" stroke="#7f4b13" stroke-width="4"/><path d="M174 205 q28 -26 55 0" fill="none" stroke="#8798c7" stroke-width="5" stroke-dasharray="7 6"/><text x="185" y="242" font-size="30">⚡</text></svg>`,
+  strongElder:`<svg ${common}>${bg}${stick(200,109,{s:.76,c:'#5271ff',face:'smile',old:true,al:[-43,45],ar:[43,45]})}<line x1="106" y1="145" x2="294" y2="145" stroke="#444" stroke-width="9" stroke-linecap="round"/><circle cx="92" cy="145" r="24" fill="#6d7383"/><circle cx="308" cy="145" r="24" fill="#6d7383"/><path d="M127 180 Q113 206 119 246" fill="none" stroke="#8b6a4e" stroke-width="7" stroke-linecap="round"/><path d="M119 246 h18" stroke="#8b6a4e" stroke-width="7" stroke-linecap="round"/><path d="M144 78 q-16 -20 -31 0" fill="none" stroke="#c5c8d2" stroke-width="6"/></svg>`,
+  sad:`<svg ${common}>${bg}${stick(200,126,{s:.82,c:'#7180b6',face:'sad',al:[-28,72],ar:[28,72],ll:[-20,116],lr:[20,116]})}<path d="M128 72 q18 -30 44 -10 q21 -31 46 -5 q31 -9 45 17 q9 27 -21 34 H151 q-29 -5 -23 -36Z" fill="#c9d2e2" stroke="#8c9ab3" stroke-width="4"/><path d="M148 120 l-8 24 M182 120 l-8 24 M218 120 l-8 24 M250 120 l-8 24" stroke="#78a7e0" stroke-width="5" stroke-linecap="round"/><path d="M168 223 q32 14 64 0" stroke="#b0bbd0" stroke-width="6" fill="none"/></svg>`,
+  silent:`<svg ${common}>${bg}${stick(175,132,{s:.8,c:'#6679df',face:'flat',al:[-35,62],ar:[25,15]})}<path d="M189 120 q20 10 24 31" stroke="#9d6e59" stroke-width="7" stroke-linecap="round"/><rect x="238" y="74" width="97" height="62" rx="18" fill="#fff" stroke="#aab7d8" stroke-width="4"/><path d="M257 96 H316" stroke="#b9c3da" stroke-width="5" stroke-linecap="round"/><path d="M257 114 H302" stroke="#b9c3da" stroke-width="5" stroke-linecap="round"/><path d="M245 66 L330 144 M330 66 L245 144" stroke="#e25c5c" stroke-width="8" stroke-linecap="round"/><path d="M158 132 h34" stroke="#333" stroke-width="4"/></svg>`,
+  proud:`<svg ${common}>${bg}<rect x="138" y="202" width="124" height="52" rx="9" fill="#e8edf8" stroke="#9aa8c6" stroke-width="4"/>${stick(200,92,{s:.76,c:'#7c5cff',face:'smile',al:[-52,28],ar:[52,28]})}<path d="M282 67 h43 v31 q0 28-21 35 q-21 -7-21 -35Z" fill="#ffd45f" stroke="#c5961c" stroke-width="5"/><path d="M282 78 h-18 q0 25 20 27 M325 78 h18 q0 25 -20 27" fill="none" stroke="#c5961c" stroke-width="5"/><path d="M303 133 v23 M287 156 h32" stroke="#c5961c" stroke-width="6" stroke-linecap="round"/><path d="M158 68 q42 -28 84 0" stroke="#f09e3d" stroke-width="5" stroke-dasharray="7 6" fill="none"/></svg>`,
+  chatting:`<svg ${common}>${bg}${stick(125,142,{s:.66,c:'#5271ff',face:'smile',al:[-35,52],ar:[35,35]})}${stick(275,142,{s:.66,c:'#ef9b45',face:'smile',al:[-35,35],ar:[35,52]})}<path d="M67 62 h100 q16 0 16 16 v32 q0 16-16 16 h-36 l-16 17 v-17 H67 q-16 0-16-16 V78 q0-16 16-16Z" fill="#eef2ff" stroke="#8796d2" stroke-width="4"/><circle cx="88" cy="94" r="5" fill="#8796d2"/><circle cx="112" cy="94" r="5" fill="#8796d2"/><circle cx="136" cy="94" r="5" fill="#8796d2"/><path d="M237 52 h100 q16 0 16 16 v32 q0 16-16 16 h-48 v17 l-16 -17 h-36 q-16 0-16-16 V68 q0-16 16-16Z" fill="#fff2dc" stroke="#d3a558" stroke-width="4"/><circle cx="258" cy="84" r="5" fill="#d3a558"/><circle cx="282" cy="84" r="5" fill="#d3a558"/><circle cx="306" cy="84" r="5" fill="#d3a558"/><path d="M179 196 q22 -18 44 0 M171 214 q30 -18 60 0 M166 232 q35 -17 70 0" fill="none" stroke="#81b5e2" stroke-width="6" stroke-linecap="round"/></svg>`
+ };
+ return scenes[kind]||`<svg ${common}>${bg}</svg>`;
+}
+
+const qstate={mode:'words',questions:[],index:0,score:0,answered:false,wrong:[]};
+const $=id=>document.getElementById(id);
+function setupQuiz(mode){qstate.mode=mode;qstate.index=0;qstate.score=0;qstate.answered=false;qstate.wrong=[];const bank=mode==='words'?words:idioms;qstate.questions=shuffle(bank).map(item=>{const others=shuffle(bank.filter(x=>x.term!==item.term)).slice(0,3).map(x=>x.term);return {...item,choices:shuffle([item.term,...others])}});renderQuiz()}
+function currentQ(){return qstate.questions[qstate.index]}
+function renderQuiz(){const q=currentQ(),total=qstate.questions.length;$('partTitle').textContent=qstate.mode==='words'?'課文詞語｜8題':'成語｜8題';$('partBadge').textContent=`第 ${qstate.index+1} / ${total} 題`;$('progressBar').style.width=`${qstate.index/total*100}%`;$('progressText').textContent=`進度：${qstate.index+1} / ${total}`;$('scoreText').textContent=`分數：${qstate.score}`;$('promptBox').innerHTML=`<strong>請聽普通話解釋，再睇火柴人圖，揀正確答案：</strong><br>「${esc(q.definition)}」`;$('illustration').innerHTML=renderIllustration(q.image);$('termGhost').textContent='□'.repeat(q.term.length);$('hintText').style.display='none';$('hintText').textContent='';$('feedback').className='feedback';$('feedback').innerHTML='';$('nextBtn').style.display='none';$('resultBox').classList.remove('show');$('resultBox').innerHTML='';qstate.answered=false;$('options').innerHTML='';['A','B','C','D'].forEach((letter,i)=>{const b=document.createElement('button');b.className='option';b.innerHTML=`<span class="tag">${letter}</span><span>${esc(q.choices[i])}</span>`;b.onclick=()=>answerQuiz(q.choices[i],b);$('options').appendChild(b)});setTimeout(()=>speak(q.definition),260)}
+function answerQuiz(choice,btn){if(qstate.answered)return;qstate.answered=true;const q=currentQ();const bs=[...document.querySelectorAll('#options .option')];bs.forEach(b=>b.disabled=true);const correctBtn=bs.find(b=>b.textContent.includes(q.term));if(choice===q.term){qstate.score++;btn.classList.add('correct');$('feedback').className='feedback show ok';$('feedback').innerHTML=`✅ 答啱！<strong>${esc(q.term)}</strong>`}else{btn.classList.add('wrong');if(correctBtn)correctBtn.classList.add('correct');$('feedback').className='feedback show bad';$('feedback').innerHTML=`❌ 正確答案：<strong>${esc(q.term)}</strong><br><span class="small">${esc(q.definition)}</span>`;qstate.wrong.push(q)}$('termGhost').textContent=q.term;$('scoreText').textContent=`分數：${qstate.score}`;$('progressBar').style.width=`${(qstate.index+1)/qstate.questions.length*100}%`;$('nextBtn').style.display='inline-block';speak(`正確答案是，${q.term}`)}
+function nextQuiz(){if(!qstate.answered)return;if(qstate.index<qstate.questions.length-1){qstate.index++;renderQuiz()}else finishQuiz()}
+function finishQuiz(){const total=qstate.questions.length;const key=qstate.mode==='words'?'bestWords':'bestIdioms';const best=Math.max(Number(localStorage.getItem(key)||0),qstate.score);localStorage.setItem(key,best);updateBest();let html=`<h3 style="margin-top:0">🎉 完成！${qstate.score} / ${total}</h3>`;if(!qstate.wrong.length)html+='<p>全對！火柴人都要企起身拍手 👏</p>';else{html+='<p>今次錯題：</p><div class="review">';qstate.wrong.forEach(x=>html+=`<div><strong>${esc(x.term)}</strong>：${esc(x.definition)}</div>`);html+='</div>'}html+=`<div class="controls" style="margin-top:12px"><button class="btn" onclick="setupQuiz('${qstate.mode}')">再玩一次</button></div>`;$('resultBox').innerHTML=html;$('resultBox').classList.add('show');$('options').innerHTML='';$('nextBtn').style.display='none';$('partBadge').textContent=`總分 ${qstate.score}/${total}`;$('illustration').innerHTML=`<svg class="illus" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="390" height="290" rx="28" fill="#fbfdff" stroke="#dbe4f0" stroke-width="3"/>${stick(200,110,{s:.9,c:'#5271ff',face:'smile',al:[-58,0],ar:[58,0],ll:[-50,116],lr:[50,116]})}<text x="200" y="65" text-anchor="middle" font-size="42">🏆</text></svg>`;$('termGhost').textContent='完成';speak(`完成。你得到 ${qstate.score} 分。`)}
+function updateBest(){$('bestWords').textContent=localStorage.getItem('bestWords')||0;$('bestIdioms').textContent=localStorage.getItem('bestIdioms')||0}
+
+// tabs
+[...document.querySelectorAll('.tab')].forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$(t.dataset.panel).classList.add('active');if(t.dataset.mode)setupQuiz(t.dataset.mode)}));
+$('restartBtn').onclick=()=>setupQuiz(qstate.mode);$('speakBtn').onclick=()=>currentQ()&&speak(currentQ().definition);$('hintBtn').onclick=()=>{const q=currentQ();$('hintText').textContent='提示：'+q.hint;$('hintText').style.display='block'};$('nextBtn').onclick=nextQuiz;
+
+// poem level switch
+[...document.querySelectorAll('.level-btn')].forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.poem-level').forEach(x=>x.classList.remove('active'));$(b.dataset.level).classList.add('active');$('poemLevelBadge').textContent=b.dataset.level==='level1'?'Level 1':'Level 2'}));
+$('readPoemBtn').onclick=()=>speak(poemLines.map(x=>x.audio).join('，'),.78);
+
+// Level 1: line order
+let l1={order:[],expected:0,placed:[]};
+function initLevel1(){l1.order=shuffle(poemLines.map((x,i)=>({...x,idx:i})));l1.expected=0;l1.placed=[];renderLevel1()}
+function renderLevel1(){
+ $('lineBoard').innerHTML=poemLines.map((_,i)=>`<div class="slot ${i<l1.placed.length?'done':''}"><span class="slot-num">${i+1}</span><span>${i<l1.placed.length?esc(l1.placed[i].text):'請選第 '+(i+1)+' 句'}</span></div>`).join('');
+ $('lineChoices').innerHTML='';l1.order.forEach(item=>{const b=document.createElement('button');b.className='line-btn'+(l1.placed.some(x=>x.idx===item.idx)?' used':'');b.textContent=item.text;b.onclick=()=>clickLine(item,b);$('lineChoices').appendChild(b)});$('lineFeedback').className='answer-banner';$('lineFeedback').innerHTML='';
+}
+function clickLine(item,btn){speak(item.audio,.78);const correct=poemLines[l1.expected];if(item.idx===l1.expected){l1.placed.push(item);l1.expected++;renderLevel1();$('lineFeedback').className='answer-banner show ok';$('lineFeedback').innerHTML=l1.expected===poemLines.length?'✅ 全部排啱！完成 Level 1！':'✅ 啱！再揀下一句。';if(l1.expected===poemLines.length)speak('全部正確，完成第一級。')}else{btn.classList.remove('wrongflash');void btn.offsetWidth;btn.classList.add('wrongflash');$('lineFeedback').className='answer-banner show bad';$('lineFeedback').innerHTML=`❌ 呢句未到。第 ${l1.expected+1} 句正確係：<strong>${esc(correct.text)}</strong>`;setTimeout(()=>speak(`正確答案是，${correct.audio}`,.78),600)}}
+$('shuffleLinesBtn').onclick=initLevel1;$('resetLinesBtn').onclick=()=>{l1.expected=0;l1.placed=[];renderLevel1()};
+
+// Level 2: character order
+let l2={lineIndex:0,expected:0,tokens:[]};
+function initLevel2(lineIndex=Math.floor(Math.random()*poemLines.length)){l2.lineIndex=lineIndex;l2.expected=0;const chars=[...poemLines[lineIndex].chars];l2.tokens=shuffle(chars.map((ch,i)=>({ch,id:`${Date.now()}_${i}_${Math.random()}`})));renderLevel2()}
+function renderPicker(){$('linePicker').innerHTML=poemLines.map((x,i)=>`<button class="pick ${i===l2.lineIndex?'active':''}" data-i="${i}">第${i+1}句</button>`).join('');[...$('linePicker').querySelectorAll('.pick')].forEach(b=>b.onclick=()=>initLevel2(Number(b.dataset.i)))}
+function renderLevel2(){const line=poemLines[l2.lineIndex],chars=[...line.chars];renderPicker();$('charSlots').innerHTML=chars.map((ch,i)=>`<div class="char-slot ${i<l2.expected?'filled':''}">${i<l2.expected?esc(chars[i]):''}</div>`).join('');$('charBank').innerHTML='';l2.tokens.forEach(tok=>{const b=document.createElement('button');b.className='char-btn'+(tok.used?' used':'');b.textContent=tok.ch;b.onclick=()=>clickChar(tok,b);$('charBank').appendChild(b)});$('charFeedback').className='answer-banner';$('charFeedback').innerHTML=''}
+function clickChar(tok,btn){if(tok.used)return;speakChar(tok.ch);const line=poemLines[l2.lineIndex],chars=[...line.chars],correct=chars[l2.expected];if(tok.ch===correct){tok.used=true;l2.expected++;renderLevel2();$('charFeedback').className='answer-banner show ok';if(l2.expected===chars.length){$('charFeedback').innerHTML=`✅ 完成！正確句子：<strong>${esc(line.text)}</strong>`;setTimeout(()=>speak(line.audio,.78),350)}else $('charFeedback').innerHTML='✅ 啱！繼續下一隻字。'}else{btn.classList.remove('wrongflash');void btn.offsetWidth;btn.classList.add('wrongflash');$('charFeedback').className='answer-banner show bad';$('charFeedback').innerHTML=`❌ 下一隻正確字係：<strong style="font-size:1.35rem">${esc(correct)}</strong>`;setTimeout(()=>speakChar(correct),600)}}
+$('changeLineBtn').onclick=()=>{let n=l2.lineIndex;while(n===l2.lineIndex)n=Math.floor(Math.random()*poemLines.length);initLevel2(n)};$('readLineBtn').onclick=()=>speak(poemLines[l2.lineIndex].audio,.78);$('reshuffleCharsBtn').onclick=()=>initLevel2(l2.lineIndex);
+
+updateBest();setupQuiz('words');initLevel1();initLevel2();
+</script>
+</body>
+</html>
